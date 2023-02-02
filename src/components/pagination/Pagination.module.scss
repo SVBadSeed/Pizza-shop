@@ -1,0 +1,50 @@
+.pagination {
+
+  :global {
+    .selected {
+      background-color: #fe5f1e;
+
+      a {
+        color: #f3f3f3;
+      }
+    }
+  }
+
+  display: flex;
+  justify-content: center;
+
+
+  li {
+    padding: 10px 0 10px 0;
+    margin-left: 20px;
+
+    border: 1px solid #fe5f1e;
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    a {
+      padding: 10px 18px;
+      color: #fe5f1e;
+    }
+
+    &:active {
+      transform: translateY(4px);
+    }
+
+    &:hover {
+      background-color: #fe5f1e;
+
+
+      a {
+        color: #f3f3f3;
+      }
+    }
+
+  }
+
+  li:first-child {
+    margin-left: 0;
+  }
+}
+

@@ -1,47 +1,50 @@
 import React, {useEffect, useRef, useState} from 'react'
-import {useDispatch, useSelector} from "react-redux"
-import {selectFilterSort, setSort, Sort} from "../../redux/slices/filterSlice"
-
+import {useDispatch,} from "react-redux"
+import {setSort} from "../../redux/filter/filterSlice"
+import {Sort, SortPropertyEnum} from "../../redux/filter/types"
 
 type SortArrItem = {
     name: string
-    sortProperty: Sort
+    sortProperty: SortPropertyEnum
 }
 
 
 export const sortArr: SortArrItem[] = [
     {
         name: 'популярности(по возр.)',
-        sortProperty: '-rating'
+        sortProperty: SortPropertyEnum.RATING_ASC
     },
     {
         name: 'популярности(по уб.)',
-        sortProperty: 'rating'
+        sortProperty: SortPropertyEnum.RATING_DESC
     },
     {
         name: 'цене(по возр.)',
-        sortProperty: '-price'
+        sortProperty: SortPropertyEnum.PRICE_ASC
     },
     {
         name: 'цене(по уб.)',
-        sortProperty: 'price'
+        sortProperty: SortPropertyEnum.PRICE_DESC
     },
     {
         name: 'алфавиту(по возр.)',
-        sortProperty: '-title'
+        sortProperty: SortPropertyEnum.TITLE_ASC
     },
     {
         name: 'алфавиту(по уб.)',
-        sortProperty: 'title'
+        sortProperty: SortPropertyEnum.TITLE_DESC
     }
 ]
 
-const Sort = () => {
-    const dispatch = useDispatch()
-    const sort = useSelector(selectFilterSort)
-    const sortRef = useRef<HTMLDivElement>(null)
+type SortPopupProps = {
+    value: Sort
+}
 
+const SortPopup: React.FC<SortPopupProps> = React.memo(({value}) => {
+    const dispatch = useDispatch()
+    const sortRef = useRef<HTMLDivElement>(null)
     const [visible, setVisible] = useState(false)
+
     const onClickListItem = (sortType: SortArrItem) => {
         dispatch(setSort(sortType))
         setVisible(false)
@@ -72,18 +75,18 @@ const Sort = () => {
                         fill="#2C2C2C"/>
                 </svg>
                 <b>Сортировка по:</b>
-                <span onClick={() => setVisible(!visible)}>{sort.name}</span>
+                <span onClick={() => setVisible(!visible)}>{value.name}</span>
             </div>
             {visible && (<div className="sort__popup">
                 <ul>
                     {sortArr.map((obj, i) => (
-                        <li key={i} className={sort.sortProperty === obj.sortProperty ? 'active' : ''}
+                        <li key={i} className={value.sortProperty === obj.sortProperty ? 'active' : ''}
                             onClick={() => onClickListItem(obj)}>{obj.name}</li>
                     ))}
                 </ul>
             </div>)}
         </div>
     )
-}
+})
 
-export default Sort
+export default SortPopup

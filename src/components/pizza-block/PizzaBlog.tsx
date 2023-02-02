@@ -1,28 +1,38 @@
 import React, {useState} from 'react'
 import {useDispatch, useSelector} from "react-redux"
-import {addItem} from "../../redux/slices/cartSlice"
-import {Link} from "react-router-dom";
-
+import {addItem} from "../../redux/cart/cartSlice"
+import {Link} from "react-router-dom"
+import {CartItem} from "../../redux/cart/types"
+import {selectCartItemById} from "../../redux/cart/selectors"
 
 const typePizza = ['тонкое', 'традиционное']
 
-const PizzaBlog = ({id, name, imageUrl, sizes, types, price}) => {
-    const dispatch = useDispatch()
-    const cartItem = useSelector(state => state.cart.items.find((obj) => obj.id === id))
+type PizzaBlogProps = {
+    imageUrl: string
+    id: string
+    name: string
+    types: number[]
+    sizes: number[]
+    price: number
+}
 
+const PizzaBlog: React.FC<PizzaBlogProps> = ({id, name, imageUrl, sizes, types, price}) => {
+    const dispatch = useDispatch()
+    const cartItem = useSelector(selectCartItemById(id))
     const [activeSize, setActiveSize] = useState(0)
     const [activeType, setActiveType] = useState(0)
 
     const addedCount = cartItem ? cartItem.count : 0
 
     const onClickAdd = (() => {
-        const item = {
+        const item: CartItem = {
             id,
             name,
             price,
             imageUrl,
             type: typePizza[activeType],
-            size: sizes[activeSize]
+            size: sizes[activeSize],
+            count: 0
         }
         dispatch(addItem(item))
     })
@@ -69,7 +79,7 @@ const PizzaBlog = ({id, name, imageUrl, sizes, types, price}) => {
                         </svg>
                         <span>Добавить</span>
                         {addedCount > 0 &&
-                        <i>{addedCount}</i>}
+                            <i>{addedCount}</i>}
                     </button>
                 </div>
             </div>
